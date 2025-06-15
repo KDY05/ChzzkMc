@@ -1,0 +1,15 @@
+name: ChzzkMc
+version: ${version}
+main: io.github.kdy05.chzzkMc.ChzzkMc
+api-version: '1.21'
+authors: [ Ararab ]
+description: chzzk to minecraft
+website: https://github.com/KDY05
+commands:
+  chzzkmc:
+    description: Plugin's Main Command
+    aliases: [cm]
+permissions:
+  chzzkmc.use:
+    description: Allows using the basic commands
+    default: op
