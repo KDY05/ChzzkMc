@@ -1,3 +1,7 @@
-API_CLIENT_ID: ""
-API_SECRET: ""
-CHANNEL_ID: ""
+# ChzzkMc 설정
+
+API_CLIENT_ID: "asdf" # 현재까진 필요없음
+API_SECRET: "asdf" # 현재까진 필요없음
+CHANNEL_ID: "" # 방송 링크 마지막 부분에 해당하는 채널 아이디를 입력
+
+broadcast-chat: false

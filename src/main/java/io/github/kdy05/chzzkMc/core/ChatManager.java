@@ -61,18 +61,29 @@ public class ChatManager {
         
         chat.on(ChatMessageEvent.class, (evt) -> {
             ChatMessage msg = evt.getMessage();
+            String content = msg.getContent();
+            String username = msg.getProfile() != null ? msg.getProfile().getNickname() : "익명";
             
+            if (content.startsWith("!")) {
+                if (ChzzkMc.getVoteManager().processVoteCommand(username, content)) {
+                    return;
+                }
+            }
+
+            if (!plugin.getConfig().getBoolean("broadcast-chat"))
+                return;
+
             if (msg.getProfile() == null) {
                 Bukkit.broadcast(Component.text(
-                        "[Chat] 익명: " + msg.getContent()));
+                        "[Chat] 익명: " + content));
                 return;
             }
-            
+
             Bukkit.broadcast(Component.text(
-                    "[Chat] " + msg.getProfile().getNickname() + ": " + msg.getContent()));
+                    "[Chat] " + username + ": " + content));
         });
     }
-    
+
     public void disconnect() {
         if (chat != null) {
             chat.closeBlocking();

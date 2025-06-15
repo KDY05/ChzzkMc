@@ -16,7 +16,7 @@ import java.util.List;
 
 public class ChzzkMcCommand implements CommandExecutor, TabCompleter {
 
-    private static final List<String> SUB_COMMANDS = Arrays.asList("help", "reload");
+    private static final List<String> SUB_COMMANDS = Arrays.asList("help", "reload", "vote");
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String s, @NotNull String @NotNull [] args) {
@@ -33,6 +33,7 @@ public class ChzzkMcCommand implements CommandExecutor, TabCompleter {
         switch (subCommand) {
             case "help" -> handleHelp(sender);
             case "reload" -> handleReload(sender);
+            case "vote" -> handleVote(sender, args);
             default -> sender.sendMessage(Component.text("잘못된 사용", NamedTextColor.RED));
         }
 
@@ -42,12 +43,41 @@ public class ChzzkMcCommand implements CommandExecutor, TabCompleter {
     private void handleHelp(CommandSender sender) {
         sender.sendMessage(Component.text("/cm help: 이 메시지를 띄웁니다.", NamedTextColor.GOLD));
         sender.sendMessage(Component.text("/cm reload: config.yml 설정을 불러옵니다.", NamedTextColor.GOLD));
+        sender.sendMessage(Component.text("/cm vote [start|end]: 투표를 시작/종료합니다.", NamedTextColor.GOLD));
     }
 
     private void handleReload(CommandSender sender) {
         ChzzkMc.getPlugin().reloadConfig();
         ChzzkMc.getChatManager().reconnect();
         sender.sendMessage(Component.text("config.yml 설정이 새로고침되었습니다.", NamedTextColor.GREEN));
+    }
+
+    private void handleVote(CommandSender sender, String[] args) {
+        if (args.length < 2) {
+            sender.sendMessage(Component.text("사용법: /cm vote <start|end>", NamedTextColor.RED));
+            return;
+        }
+
+        String voteCommand = args[1].toLowerCase();
+        switch (voteCommand) {
+            case "start" -> {
+                if (ChzzkMc.getVoteManager().isVoteActive()) {
+                    sender.sendMessage(Component.text("이미 투표가 진행중입니다.", NamedTextColor.RED));
+                    return;
+                }
+                ChzzkMc.getVoteManager().startVote();
+                sender.sendMessage(Component.text("투표가 시작되었습니다!", NamedTextColor.GREEN));
+            }
+            case "end" -> {
+                if (!ChzzkMc.getVoteManager().isVoteActive()) {
+                    sender.sendMessage(Component.text("진행중인 투표가 없습니다.", NamedTextColor.RED));
+                    return;
+                }
+                ChzzkMc.getVoteManager().endVote();
+                sender.sendMessage(Component.text("투표가 종료되었습니다!", NamedTextColor.GREEN));
+            }
+            default -> sender.sendMessage(Component.text("사용법: /cm vote <start|end>", NamedTextColor.RED));
+        }
     }
 
     @Override
@@ -59,6 +89,11 @@ public class ChzzkMcCommand implements CommandExecutor, TabCompleter {
         List<String> completions = new ArrayList<>();
         if (args.length == 1) {
             return filterCompletions(args[0]);
+        } else if (args.length == 2 && args[0].equalsIgnoreCase("vote")) {
+            List<String> voteCommands = Arrays.asList("start", "end");
+            return voteCommands.stream()
+                    .filter(completion -> completion.toLowerCase().startsWith(args[1].toLowerCase()))
+                    .toList();
         }
         return completions;
     }
