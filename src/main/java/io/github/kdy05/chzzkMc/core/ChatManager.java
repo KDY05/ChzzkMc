@@ -64,7 +64,7 @@ public class ChatManager {
             String username = msg.getProfile() != null ? msg.getProfile().getNickname() : "익명";
             
             if (content.startsWith("!")) {
-                if (ChzzkMc.getVoteManager().processVoteCommand(username, content)) {
+                if (plugin.getVoteManager().processVoteCommand(username, content)) {
                     return;
                 }
             }
@@ -87,10 +87,6 @@ public class ChatManager {
         if (chat != null) {
             chat.closeBlocking();
         }
-    }
-    
-    public ChzzkChat getChat() {
-        return chat;
     }
 
 }

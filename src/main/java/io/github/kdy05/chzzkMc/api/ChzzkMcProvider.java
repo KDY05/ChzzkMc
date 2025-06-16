@@ -1,6 +1,7 @@
 package io.github.kdy05.chzzkMc.api;
 
 import io.github.kdy05.chzzkMc.ChzzkMc;
+import io.github.kdy05.chzzkMc.core.VoteManager;
 
 /**
  * API provider for ChzzkMc plugin
@@ -11,9 +12,11 @@ public class ChzzkMcProvider {
     
     private static ChzzkMcProvider instance;
     private final ChzzkMc plugin;
+    private final VoteManager voteManager;
     
-    private ChzzkMcProvider(ChzzkMc plugin) {
+    private ChzzkMcProvider(ChzzkMc plugin, VoteManager voteManager) {
         this.plugin = plugin;
+        this.voteManager = voteManager;
     }
     
     /**
@@ -30,10 +33,11 @@ public class ChzzkMcProvider {
     /**
      * Initialize the provider (called by ChzzkMc plugin)
      * @param plugin The ChzzkMc plugin instance
+     * @param voteManager The VoteManager instance
      */
-    public static void initialize(ChzzkMc plugin) {
+    public static void initialize(ChzzkMc plugin, VoteManager voteManager) {
         if (instance == null) {
-            instance = new ChzzkMcProvider(plugin);
+            instance = new ChzzkMcProvider(plugin, voteManager);
         }
     }
     
@@ -66,7 +70,7 @@ public class ChzzkMcProvider {
             }
         }
         
-        return ChzzkMc.getVoteManager().startApiVote(optionTitles, durationSeconds);
+        return voteManager.startApiVote(optionTitles, durationSeconds);
     }
     
     /**
@@ -74,7 +78,7 @@ public class ChzzkMcProvider {
      * @return true if vote is active
      */
     public boolean isVoteActive() {
-        return ChzzkMc.getVoteManager().isVoteActive();
+        return voteManager.isVoteActive();
     }
     
     /**
@@ -82,6 +86,6 @@ public class ChzzkMcProvider {
      * @return true if vote was ended, false if no vote was active
      */
     public boolean endVote() {
-        return ChzzkMc.getVoteManager().forceEndVote();
+        return voteManager.forceEndVote();
     }
 }

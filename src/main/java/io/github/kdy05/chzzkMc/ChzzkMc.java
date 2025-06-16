@@ -14,25 +14,22 @@ import java.util.Objects;
 
 public final class ChzzkMc extends JavaPlugin {
 
-    private static ChzzkMc plugin;
-    private static VoteManager voteManager;
-    private static ChatManager chatManager;
+    private VoteManager voteManager;
+    private ChatManager chatManager;
 
     @Override
     public void onEnable() {
         saveDefaultConfig();
-        plugin = this;
 
         ChzzkClient client = new ChzzkClientBuilder().build();
-
         voteManager = new VoteManager(this);
         chatManager = new ChatManager(this, client);
+
         chatManager.initialize();
-
-        Objects.requireNonNull(Bukkit.getServer().getPluginCommand("chzzkmc")).setExecutor(new ChzzkMcCommand());
-        Bukkit.getPluginManager().registerEvents(new PlayerEventListener(), this);
-
-        ChzzkMcProvider.initialize(this);
+        Objects.requireNonNull(Bukkit.getServer().getPluginCommand("chzzkmc"))
+                .setExecutor(new ChzzkMcCommand(this, voteManager, chatManager));
+        Bukkit.getPluginManager().registerEvents(new PlayerEventListener(voteManager), this);
+        ChzzkMcProvider.initialize(this, voteManager);
 
         getLogger().info("플러그인이 활성화되었습니다.");
     }
@@ -46,15 +43,11 @@ public final class ChzzkMc extends JavaPlugin {
         getLogger().info("플러그인이 비활성화되었습니다.");
     }
 
-    public static ChzzkMc getPlugin() {
-        return plugin;
-    }
-
-    public static VoteManager getVoteManager() {
+    public VoteManager getVoteManager() {
         return voteManager;
     }
 
-    public static ChatManager getChatManager() {
+    public ChatManager getChatManager() {
         return chatManager;
     }
 }

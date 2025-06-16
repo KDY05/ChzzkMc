@@ -1,6 +1,8 @@
 package io.github.kdy05.chzzkMc.command;
 
 import io.github.kdy05.chzzkMc.ChzzkMc;
+import io.github.kdy05.chzzkMc.core.ChatManager;
+import io.github.kdy05.chzzkMc.core.VoteManager;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.command.Command;
@@ -17,6 +19,16 @@ import java.util.List;
 public class ChzzkMcCommand implements CommandExecutor, TabCompleter {
 
     private static final List<String> SUB_COMMANDS = Arrays.asList("help", "reload", "vote");
+    
+    private final ChzzkMc plugin;
+    private final VoteManager voteManager;
+    private final ChatManager chatManager;
+    
+    public ChzzkMcCommand(ChzzkMc plugin, VoteManager voteManager, ChatManager chatManager) {
+        this.plugin = plugin;
+        this.voteManager = voteManager;
+        this.chatManager = chatManager;
+    }
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String s, @NotNull String @NotNull [] args) {
@@ -47,8 +59,8 @@ public class ChzzkMcCommand implements CommandExecutor, TabCompleter {
     }
 
     private void handleReload(CommandSender sender) {
-        ChzzkMc.getPlugin().reloadConfig();
-        ChzzkMc.getChatManager().reconnect();
+        plugin.reloadConfig();
+        chatManager.reconnect();
         sender.sendMessage(Component.text("config.yml 설정이 새로고침되었습니다.", NamedTextColor.GREEN));
     }
 
@@ -61,19 +73,19 @@ public class ChzzkMcCommand implements CommandExecutor, TabCompleter {
         String voteCommand = args[1].toLowerCase();
         switch (voteCommand) {
             case "start" -> {
-                if (ChzzkMc.getVoteManager().isVoteActive()) {
+                if (voteManager.isVoteActive()) {
                     sender.sendMessage(Component.text("이미 투표가 진행중입니다.", NamedTextColor.RED));
                     return;
                 }
-                ChzzkMc.getVoteManager().startVote();
+                voteManager.startVote();
                 sender.sendMessage(Component.text("투표가 시작되었습니다!", NamedTextColor.GREEN));
             }
             case "end" -> {
-                if (!ChzzkMc.getVoteManager().isVoteActive()) {
+                if (!voteManager.isVoteActive()) {
                     sender.sendMessage(Component.text("진행중인 투표가 없습니다.", NamedTextColor.RED));
                     return;
                 }
-                ChzzkMc.getVoteManager().endVote();
+                voteManager.endVote();
                 sender.sendMessage(Component.text("투표가 종료되었습니다!", NamedTextColor.GREEN));
             }
             default -> sender.sendMessage(Component.text("사용법: /cm vote <start|end>", NamedTextColor.RED));
