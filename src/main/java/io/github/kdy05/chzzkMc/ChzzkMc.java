@@ -3,7 +3,7 @@ package io.github.kdy05.chzzkMc;
 import io.github.kdy05.chzzkMc.command.ChzzkMcCommand;
 import io.github.kdy05.chzzkMc.core.ChatManager;
 import io.github.kdy05.chzzkMc.listener.PlayerEventListener;
-import io.github.kdy05.chzzkMc.vote.VoteManager;
+import io.github.kdy05.chzzkMc.core.VoteManager;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 import xyz.r2turntrue.chzzk4j.ChzzkClient;
@@ -22,10 +22,7 @@ public final class ChzzkMc extends JavaPlugin {
         saveDefaultConfig();
         plugin = this;
 
-        ChzzkClient client = new ChzzkClientBuilder(
-                getConfig().getString("API_CLIENT_ID", "client_id"),
-                getConfig().getString("API_SECRET", "secret"))
-                .build();
+        ChzzkClient client = new ChzzkClientBuilder().build();
 
         voteManager = new VoteManager(this);
         chatManager = new ChatManager(this, client);

@@ -1,4 +1,4 @@
-package io.github.kdy05.chzzkMc.vote;
+package io.github.kdy05.chzzkMc.core;
 
 import io.github.kdy05.chzzkMc.ChzzkMc;
 import net.kyori.adventure.bossbar.BossBar;

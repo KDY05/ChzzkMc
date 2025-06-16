@@ -25,7 +25,7 @@ public class ChatManager {
     }
     
     public void initialize() {
-        String channelId = plugin.getConfig().getString("CHANNEL_ID");
+        String channelId = plugin.getConfig().getString("channel-id");
         connect(channelId);
     }
     
@@ -46,14 +46,14 @@ public class ChatManager {
     }
     
     public void reconnect() {
-        String channelId = plugin.getConfig().getString("CHANNEL_ID");
+        String channelId = plugin.getConfig().getString("channel-id");
         plugin.getLogger().info("Reconnecting to channel: " + channelId);
         connect(channelId);
     }
     
     private void setupEventHandlers() {
         chat.on(ConnectEvent.class, (evt) -> {
-            plugin.getLogger().info("Connected to chat!");
+            plugin.getLogger().info("설정한 채널의 채팅창에 연결되었습니다.");
             if (!evt.isReconnecting()) {
                 chat.requestRecentChat(10);
             }
