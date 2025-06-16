@@ -12,7 +12,6 @@ import xyz.r2turntrue.chzzk4j.chat.event.ConnectEvent;
 
 import java.io.IOException;
 
-@SuppressWarnings("unused")
 public class ChatManager {
     
     private final ChzzkMc plugin;

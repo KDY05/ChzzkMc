@@ -1,5 +1,6 @@
 package io.github.kdy05.chzzkMc;
 
+import io.github.kdy05.chzzkMc.api.ChzzkMcProvider;
 import io.github.kdy05.chzzkMc.command.ChzzkMcCommand;
 import io.github.kdy05.chzzkMc.core.ChatManager;
 import io.github.kdy05.chzzkMc.listener.PlayerEventListener;
@@ -31,6 +32,8 @@ public final class ChzzkMc extends JavaPlugin {
         Objects.requireNonNull(Bukkit.getServer().getPluginCommand("chzzkmc")).setExecutor(new ChzzkMcCommand());
         Bukkit.getPluginManager().registerEvents(new PlayerEventListener(), this);
 
+        ChzzkMcProvider.initialize(this);
+
         getLogger().info("플러그인이 활성화되었습니다.");
     }
 
@@ -39,6 +42,7 @@ public final class ChzzkMc extends JavaPlugin {
         if (chatManager != null) {
             chatManager.disconnect();
         }
+        ChzzkMcProvider.shutdown();
         getLogger().info("플러그인이 비활성화되었습니다.");
     }
 

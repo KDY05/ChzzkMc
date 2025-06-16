@@ -1,3 +1,11 @@
 # ChzzkMc 설정
-channel-id: "" # 방송 링크 마지막 부분에 해당하는 채널 아이디를 입력
+channel-id: "1dcb975316a0be7bc445beecc29b9673" # 방송 링크 마지막 부분에 해당하는 채널 아이디를 입력
 broadcast-chat: false
+vote:
+  option: 3 # min:2, max:4
+  titles:
+    - "1번에 투표하세요!"
+    - "2번에 투표하세요!"
+    - "3번에 투표하세요!"
+    - "4번에 투표하세요!"
+  durationSec: 120
