@@ -1,6 +1,5 @@
 package io.github.kdy05.chzzkMc.api;
 
-import io.github.kdy05.chzzkMc.ChzzkMc;
 import io.github.kdy05.chzzkMc.core.VoteManager;
 
 /**
@@ -11,11 +10,9 @@ import io.github.kdy05.chzzkMc.core.VoteManager;
 public class ChzzkMcProvider {
     
     private static ChzzkMcProvider instance;
-    private final ChzzkMc plugin;
     private final VoteManager voteManager;
     
-    private ChzzkMcProvider(ChzzkMc plugin, VoteManager voteManager) {
-        this.plugin = plugin;
+    private ChzzkMcProvider(VoteManager voteManager) {
         this.voteManager = voteManager;
     }
     
@@ -32,12 +29,11 @@ public class ChzzkMcProvider {
     
     /**
      * Initialize the provider (called by ChzzkMc plugin)
-     * @param plugin The ChzzkMc plugin instance
      * @param voteManager The VoteManager instance
      */
-    public static void initialize(ChzzkMc plugin, VoteManager voteManager) {
+    public static void initialize(VoteManager voteManager) {
         if (instance == null) {
-            instance = new ChzzkMcProvider(plugin, voteManager);
+            instance = new ChzzkMcProvider(voteManager);
         }
     }
     
@@ -70,7 +66,7 @@ public class ChzzkMcProvider {
             }
         }
         
-        return voteManager.startApiVote(optionTitles, durationSeconds);
+        return voteManager.startVote(optionTitles, durationSeconds, true);
     }
     
     /**

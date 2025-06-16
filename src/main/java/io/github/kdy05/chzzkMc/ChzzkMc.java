@@ -29,7 +29,7 @@ public final class ChzzkMc extends JavaPlugin {
         Objects.requireNonNull(Bukkit.getServer().getPluginCommand("chzzkmc"))
                 .setExecutor(new ChzzkMcCommand(this, voteManager, chatManager));
         Bukkit.getPluginManager().registerEvents(new PlayerEventListener(voteManager), this);
-        ChzzkMcProvider.initialize(this, voteManager);
+        ChzzkMcProvider.initialize(voteManager);
 
         getLogger().info("플러그인이 활성화되었습니다.");
     }

@@ -77,8 +77,28 @@ public class ChzzkMcCommand implements CommandExecutor, TabCompleter {
                     sender.sendMessage(Component.text("이미 투표가 진행중입니다.", NamedTextColor.RED));
                     return;
                 }
-                voteManager.startVote();
-                sender.sendMessage(Component.text("투표가 시작되었습니다!", NamedTextColor.GREEN));
+                
+                // config에서 투표 설정 읽기
+                String[] configTitles = plugin.getConfig().getStringList("vote.titles").toArray(new String[0]);
+                int configOptions = plugin.getConfig().getInt("vote.option", 3);
+                int configDuration = plugin.getConfig().getInt("vote.durationSec", 120);
+                
+                // 투표 제목 배열 구성
+                String[] titles = new String[configOptions];
+                for (int i = 0; i < configOptions; i++) {
+                    if (i < configTitles.length) {
+                        titles[i] = configTitles[i];
+                    } else {
+                        titles[i] = "투표 " + (i + 1) + "번";
+                    }
+                }
+                
+                boolean success = voteManager.startVote(titles, configDuration, false);
+                if (success) {
+                    sender.sendMessage(Component.text("투표가 시작되었습니다!", NamedTextColor.GREEN));
+                } else {
+                    sender.sendMessage(Component.text("투표 시작에 실패했습니다.", NamedTextColor.RED));
+                }
             }
             case "end" -> {
                 if (!voteManager.isVoteActive()) {
