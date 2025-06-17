@@ -9,3 +9,4 @@ vote:
     - "3번에 투표하세요!"
     - "4번에 투표하세요!"
   durationSec: 120
+  showingResult: true # 투표 결과를 발표할지 여부

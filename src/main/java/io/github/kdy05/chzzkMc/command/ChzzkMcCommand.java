@@ -61,6 +61,7 @@ public class ChzzkMcCommand implements CommandExecutor, TabCompleter {
     private void handleReload(CommandSender sender) {
         plugin.reloadConfig();
         chatManager.reconnect();
+        voteManager.reloadConfig();
         sender.sendMessage(Component.text("config.yml 설정이 새로고침되었습니다.", NamedTextColor.GREEN));
     }
 

@@ -1,5 +1,6 @@
 package io.github.kdy05.chzzkMc.core.vote;
 
+import io.github.kdy05.chzzkMc.ChzzkMc;
 import io.github.kdy05.chzzkMc.api.event.VoteEndEvent;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -7,7 +8,23 @@ import org.bukkit.Bukkit;
 
 public class VoteResultManager {
     
+    private final ChzzkMc plugin;
+    private boolean showingResult = true;
+    
+    public VoteResultManager(ChzzkMc plugin) {
+        this.plugin = plugin;
+        reloadShowingResult();
+    }
+    
     public void announceResults(String[] optionTitles, int[] voteCounts) {
+        announceResults(optionTitles, voteCounts, showingResult);
+    }
+    
+    public void announceResults(String[] optionTitles, int[] voteCounts, boolean showingResult) {
+        if (!showingResult) {
+            return;
+        }
+        
         int totalVotes = 0;
         for (int i = 0; i < optionTitles.length; i++) {
             totalVotes += voteCounts[i];
@@ -48,6 +65,14 @@ public class VoteResultManager {
         }
 
         return winningOption;
+    }
+    
+    public boolean isShowingResult() {
+        return showingResult;
+    }
+    
+    public void reloadShowingResult() {
+        this.showingResult = plugin.getConfig().getBoolean("vote.showingResult", true);
     }
     
     private NamedTextColor getColorForOption(int option) {

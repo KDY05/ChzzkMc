@@ -28,10 +28,16 @@ public class VoteManager {
     public VoteManager(ChzzkMc plugin) {
         this.bossBarManager = new VoteBossBarManager();
         this.timerManager = new VoteTimerManager(plugin);
-        this.resultManager = new VoteResultManager();
+        this.resultManager = new VoteResultManager(plugin);
     }
 
     public boolean startVote(String[] optionTitles, int durationSeconds, boolean isApiVote) {
+        // 이 메서드는 커맨드 전용이므로 항상 config 설정을 사용
+        boolean showingResult = resultManager.isShowingResult();
+        return startVote(optionTitles, durationSeconds, isApiVote, showingResult);
+    }
+    
+    public boolean startVote(String[] optionTitles, int durationSeconds, boolean isApiVote, boolean showingResult) {
         if (voteActive) {
             return false;
         }
@@ -48,7 +54,7 @@ public class VoteManager {
         voteActive = true;
         
         announceVoteStart();
-        timerManager.startTimer(durationSeconds, this::endVote);
+        timerManager.startTimer(durationSeconds, () -> endVote(showingResult));
 
         return true;
     }
@@ -68,6 +74,11 @@ public class VoteManager {
     }
 
     public void endVote() {
+        boolean showingResult = !isApiVote && resultManager.isShowingResult();
+        endVote(showingResult);
+    }
+    
+    private void endVote(boolean showingResult) {
         if (!voteActive) {
             return;
         }
@@ -75,7 +86,8 @@ public class VoteManager {
         voteActive = false;
         timerManager.cancelTimers();
         bossBarManager.hideBossBars();
-        resultManager.announceResults(optionTitles, voteCounts);
+        
+        resultManager.announceResults(optionTitles, voteCounts, showingResult);
 
         if (isApiVote) {
             resultManager.fireVoteEndEvent(optionTitles, voteCounts);
@@ -137,4 +149,9 @@ public class VoteManager {
     public boolean isVoteActive() {
         return voteActive;
     }
+    
+    public void reloadConfig() {
+        resultManager.reloadShowingResult();
+    }
+
 }

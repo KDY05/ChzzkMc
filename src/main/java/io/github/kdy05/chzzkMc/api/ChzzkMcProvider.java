@@ -52,6 +52,18 @@ public class ChzzkMcProvider {
      * @throws IllegalArgumentException if parameters are invalid
      */
     public boolean startVote(String[] optionTitles, int durationSeconds) {
+        return startVote(optionTitles, durationSeconds, false);
+    }
+    
+    /**
+     * Start a vote with custom options and result announcement setting
+     * @param optionTitles Array of vote option titles (2-4 options)
+     * @param durationSeconds Duration of the vote in seconds
+     * @param showResult true to announce results, false to suppress them
+     * @return true if vote started successfully, false if another vote is already active
+     * @throws IllegalArgumentException if parameters are invalid
+     */
+    public boolean startVote(String[] optionTitles, int durationSeconds, boolean showResult) {
         if (optionTitles == null || optionTitles.length < 2 || optionTitles.length > 4) {
             throw new IllegalArgumentException("Vote must have 2-4 options");
         }
@@ -66,7 +78,40 @@ public class ChzzkMcProvider {
             }
         }
         
-        return voteManager.startVote(optionTitles, durationSeconds, true);
+        return voteManager.startVote(optionTitles, durationSeconds, true, showResult);
+    }
+    
+    /**
+     * Start a vote without automatic timer (infinite duration)
+     * The vote must be manually ended using endVote()
+     * @param optionTitles Array of vote option titles (2-4 options)
+     * @return true if vote started successfully, false if another vote is already active
+     * @throws IllegalArgumentException if parameters are invalid
+     */
+    public boolean startVoteWithoutTimer(String[] optionTitles) {
+        return startVoteWithoutTimer(optionTitles, false);
+    }
+    
+    /**
+     * Start a vote without automatic timer (infinite duration) and result announcement setting
+     * The vote must be manually ended using endVote()
+     * @param optionTitles Array of vote option titles (2-4 options)
+     * @param showResult true to announce results, false to suppress them
+     * @return true if vote started successfully, false if another vote is already active
+     * @throws IllegalArgumentException if parameters are invalid
+     */
+    public boolean startVoteWithoutTimer(String[] optionTitles, boolean showResult) {
+        if (optionTitles == null || optionTitles.length < 2 || optionTitles.length > 4) {
+            throw new IllegalArgumentException("Vote must have 2-4 options");
+        }
+        
+        for (String title : optionTitles) {
+            if (title == null || title.trim().isEmpty()) {
+                throw new IllegalArgumentException("All option titles must be non-empty");
+            }
+        }
+        
+        return voteManager.startVote(optionTitles, 0, true, showResult);
     }
     
     /**
