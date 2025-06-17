@@ -69,6 +69,9 @@ public class VoteEndEvent extends Event {
      * @return winning option title
      */
     public String getWinningOptionTitle() {
+        if (winningOption < 1 || winningOption > optionTitles.length) {
+            throw new IllegalStateException("Invalid winning option: " + winningOption);
+        }
         return optionTitles[winningOption - 1];
     }
     
@@ -77,6 +80,9 @@ public class VoteEndEvent extends Event {
      * @return winning option vote count
      */
     public int getWinningOptionVotes() {
+        if (winningOption < 1 || winningOption > voteCounts.length) {
+            throw new IllegalStateException("Invalid winning option: " + winningOption);
+        }
         return voteCounts[winningOption - 1];
     }
     

@@ -40,7 +40,8 @@ public class ChatManager {
             
         } catch (IOException e) {
             plugin.getLogger().severe("Failed to connect to chat: " + e.getMessage());
-            throw new RuntimeException(e);
+            plugin.getLogger().severe("Disabling plugin due to chat connection failure");
+            plugin.getServer().getPluginManager().disablePlugin(plugin);
         }
     }
     

@@ -1,15 +1,11 @@
 # ChzzkMc
 
-> 치지직(Chzzk) 스트리밍 플랫폼과 마인크래프트 서버를 연동하는 Paper 플러그인
-
 ChzzkMc는 한국의 스트리밍 플랫폼인 치지직의 채팅을 마인크래프트 서버에 실시간으로 연동하고, 시청자들이 채팅으로 투표에 참여할 수 있는 기능을 제공합니다.
 
 ## 기능
 
 - **실시간 채팅 연동**: 치지직 채팅을 마인크래프트 서버로 실시간 전송
-- **투표 시스템**: 2-4개 선택지로 구성 가능한 투표 기능
-- **실시간 진행률 표시**: 보스바를 이용한 득표율 막대와 액션바 카운트다운
-- **설정 기반**: config.yml을 통한 투표 설정 구성
+- **투표 시스템**: 2-4개 선택지로 구성 가능한 투표 기능. 보스바와 액션바를 통한 투표 현황 표시
 - **API 지원**: 다른 플러그인에서 투표 제어
 
 ## 요구사항
@@ -18,7 +14,7 @@ ChzzkMc는 한국의 스트리밍 플랫폼인 치지직의 채팅을 마인크�
 - **서버 소프트웨어**: Paper (또는 Paper 기반 포크)
 - **Java**: 21+
 
-## config.yml 설정
+## 설정(config.yml)
 
 ```yaml
 # ChzzkMc 설정
@@ -38,12 +34,9 @@ vote:
 
 ### 명령어
 
-```
-/chzzkmc help          # 도움말 표시
-/chzzkmc reload        # 설정 파일 재로드 및 채팅 재연결
-/chzzkmc vote start    # 투표 시작
-/chzzkmc vote end      # 투표 강제 종료
-```
+- `/chzzkmc help` - 도움말 표시
+- `/chzzkmc reload` - 설정 파일 재로드 및 채팅 재연결
+- `/chzzkmc vote <start|end>` - 투표 시작 / 강제종료
 
 ### 권한
 `chzzkmc.use` (기본값: OP)
@@ -66,9 +59,20 @@ vote:
 
 ## API 사용법
 
-다른 플러그인에서 ChzzkMc의 투표 기능을 사용할 수 있습니다.
+다른 플러그인에서 ChzzkMc의 투표 기능을 사용할 수 있습니다. 
+ChzzkMcProvider로 투표를 시작 및 종료하고, VoteEndEvent로 투표 결과를 확인할 수 있습니다.
 
-### ChzzkMcProvider 사용
+### 설치
+
+로컬 JAR 파일을 참조하여 개발해야 합니다.
+
+```groovy
+dependencies {
+    compileOnly files("libs/ChzzkMc-1.0.0.jar")
+}
+```
+
+### ChzzkMcProvider 예제
 
 ```java
 // ChzzkMc API 가져오기
@@ -85,7 +89,7 @@ boolean isActive = provider.isVoteActive();
 boolean ended = provider.endVote();
 ```
 
-### OnVoteEnd 이벤트 처리
+### VoteEndEvent 예제
 
 ```java
 @EventHandler
