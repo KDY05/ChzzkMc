@@ -1,8 +1,7 @@
 package io.github.kdy05.chzzkMc.core;
 
 import io.github.kdy05.chzzkMc.ChzzkMc;
-import net.kyori.adventure.text.Component;
-import org.bukkit.Bukkit;
+import io.github.kdy05.chzzkMc.core.chat.ChatBroadcastManager;
 import xyz.r2turntrue.chzzk4j.ChzzkClient;
 import xyz.r2turntrue.chzzk4j.chat.ChatMessage;
 import xyz.r2turntrue.chzzk4j.chat.ChzzkChat;
@@ -16,11 +15,13 @@ public class ChatManager {
     
     private final ChzzkMc plugin;
     private final ChzzkClient client;
+    private final ChatBroadcastManager broadcastManager;
     private ChzzkChat chat;
     
     public ChatManager(ChzzkMc plugin, ChzzkClient client) {
         this.plugin = plugin;
         this.client = client;
+        this.broadcastManager = new ChatBroadcastManager();
     }
     
     public void initialize() {
@@ -63,24 +64,14 @@ public class ChatManager {
             ChatMessage msg = evt.getMessage();
             String content = msg.getContent();
             String username = msg.getProfile() != null ? msg.getProfile().getNickname() : "익명";
-            
-            if (content.startsWith("!")) {
-                if (plugin.getVoteManager().processVoteCommand(username, content)) {
-                    return;
-                }
-            }
+
+            if (content.startsWith("!"))
+                plugin.getVoteManager().processVoteCommand(username, content);
 
             if (!plugin.getConfig().getBoolean("broadcast-chat"))
                 return;
 
-            if (msg.getProfile() == null) {
-                Bukkit.broadcast(Component.text(
-                        "[Chat] 익명: " + content));
-                return;
-            }
-
-            Bukkit.broadcast(Component.text(
-                    "[Chat] " + username + ": " + content));
+            broadcastManager.broadcastChatMessage(username, content);
         });
     }
 

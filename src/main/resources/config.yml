@@ -1,12 +1,21 @@
 # ChzzkMc 설정
-channel-id: "1dcb975316a0be7bc445beecc29b9673" # 방송 링크 마지막 부분에 해당하는 채널 아이디를 입력
+
+# 치지직 채널 ID (스트리밍 링크 마지막 부분)
+channel-id: "1dcb975316a0be7bc445beecc29b9673"
+
+# 치지직 채팅 출력 여부
 broadcast-chat: false
+
 vote:
-  option: 3 # min:2, max:4
+  # 투표 선택지 개수 (2-4)
+  option: 3
+  # 투표 선택지 제목
   titles:
     - "1번에 투표하세요!"
     - "2번에 투표하세요!"
     - "3번에 투표하세요!"
     - "4번에 투표하세요!"
+  # 투표 지속 시간 (초)
   durationSec: 120
-  showingResult: true # 투표 결과를 발표할지 여부
+  # 투표 결과를 발표할지 여부
+  showingResult: true

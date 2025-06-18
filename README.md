@@ -2,38 +2,54 @@
 
 ChzzkMc는 한국의 스트리밍 플랫폼인 치지직의 채팅을 마인크래프트 서버에 실시간으로 연동하고, 시청자들이 채팅으로 투표에 참여할 수 있는 기능을 제공합니다.
 
+## 라이센스
+
+이 프로젝트는 GNU General Public License v3.0(GPL-3.0) 라이센스 하에 배포됩니다.
+자세한 내용은 [LICENSE](LICENSE) 파일을 참조하세요.
+
+## 라이브러리
+
+ChzzkMC는 치지직의 비공식 자바 API 라이브러리 [chzzk4j](https://github.com/R2turnTrue/chzzk4j)를 기반으로 만들어졌습니다.
+
+## 요구사항
+
+- **Minecraft**: 1.21.5 이상
+- **서버 소프트웨어**: Paper (또는 Paper 기반 포크)
+- **Java**: 21 이상
+
 ## 기능
 
 - **실시간 채팅 연동**: 치지직 채팅을 마인크래프트 서버로 실시간 전송
 - **투표 시스템**: 2-4개 선택지로 구성 가능한 투표 기능. 보스바와 액션바를 통한 투표 현황 표시
 - **API 지원**: 다른 플러그인에서 투표 제어
 
-## 요구사항
-
-- **Minecraft**: 1.21.5+
-- **서버 소프트웨어**: Paper (또는 Paper 기반 포크)
-- **Java**: 21+
-
 ## 설정(config.yml)
 
 ```yaml
-# ChzzkMc 설정
-channel-id: "1dcb975316a0be7bc445beecc29b9673"  # 치지직 채널 ID
-broadcast-chat: false                           # 채팅 전송 여부
+# 치지직 채널 ID (스트리밍 링크 마지막 부분)
+channel-id: "1dcb975316a0be7bc445beecc29b9673"
+
+# 치지직 채팅 출력 여부
+broadcast-chat: false
+
 vote:
-  option: 3                                     # 투표 선택지 개수 (2-4)
-  titles:                                       # 투표 선택지 제목
+  # 투표 선택지 개수 (2-4)
+  option: 3
+  # 투표 선택지 제목
+  titles:
     - "1번에 투표하세요!"
     - "2번에 투표하세요!"
     - "3번에 투표하세요!"
     - "4번에 투표하세요!"
-  durationSec: 120                              # 투표 지속 시간 (초)
+  # 투표 지속 시간 (초)
+  durationSec: 120
+  # 투표 결과를 발표할지 여부
+  showingResult: true
 ```
 
 ## 사용법
 
 ### 명령어
-
 - `/chzzkmc help` - 도움말 표시
 - `/chzzkmc reload` - 설정 파일 재로드 및 채팅 재연결
 - `/chzzkmc vote <start|end>` - 투표 시작 / 강제종료
@@ -42,7 +58,6 @@ vote:
 `chzzkmc.use` (기본값: OP)
 
 ### 투표 참여 방법
-
 시청자들은 치지직 채팅에서 다음 명령어로 투표에 참여할 수 있습니다:
 
 - `!투표1` - 첫 번째 선택지에 투표
@@ -51,7 +66,6 @@ vote:
 - `!투표4` - 네 번째 선택지에 투표
 
 ### 투표 시스템 특징
-
 - **실시간 진행률**: 보스바를 통해 각 선택지별 득표율을 실시간으로 확인
 - **카운트다운**: 액션바에 남은 투표 시간 표시
 - **투표 변경**: 사용자는 투표를 변경할 수 있으며, 이전 투표는 자동으로 취소
@@ -61,19 +75,18 @@ vote:
 
 다른 플러그인에서 ChzzkMc의 투표 기능을 사용할 수 있습니다. 
 ChzzkMcProvider로 투표를 시작 및 종료하고, VoteEndEvent로 투표 결과를 확인할 수 있습니다.
+자세한 내용은 [api](src/main/java/io/github/kdy05/chzzkMc/api) 패키지를 참고해주세요.
 
 ### 설치
-
 로컬 JAR 파일을 참조하여 개발해야 합니다.
 
 ```groovy
 dependencies {
-    compileOnly files("libs/ChzzkMc-1.0.0.jar")
+    compileOnly files("libs/ChzzkMc-1.0.1.jar")
 }
 ```
 
 ### ChzzkMcProvider 예제
-
 ```java
 // ChzzkMc API 가져오기
 ChzzkMcProvider provider = ChzzkMcProvider.getInstance();
@@ -90,7 +103,6 @@ boolean ended = provider.endVote();
 ```
 
 ### VoteEndEvent 예제
-
 ```java
 @EventHandler
 public void onVoteEnd(VoteEndEvent event) {

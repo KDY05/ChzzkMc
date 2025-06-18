@@ -55,7 +55,7 @@ public class ChzzkMcCommand implements CommandExecutor, TabCompleter {
     private void handleHelp(CommandSender sender) {
         sender.sendMessage(Component.text("/cm help: 이 메시지를 띄웁니다.", NamedTextColor.GOLD));
         sender.sendMessage(Component.text("/cm reload: config.yml 설정을 불러옵니다.", NamedTextColor.GOLD));
-        sender.sendMessage(Component.text("/cm vote [start|end]: 투표를 시작/종료합니다.", NamedTextColor.GOLD));
+        sender.sendMessage(Component.text("/cm vote <start|end>: 투표를 시작/종료합니다.", NamedTextColor.GOLD));
     }
 
     private void handleReload(CommandSender sender) {
