@@ -1,4 +1,5 @@
 # ChzzkMc
+[![](https://jitpack.io/v/KDY05/ChzzkMc.svg)](https://jitpack.io/#KDY05/ChzzkMc)
 
 ChzzkMc는 한국의 스트리밍 플랫폼인 치지직의 채팅을 마인크래프트 서버에 실시간으로 연동하고, 시청자들이 채팅으로 투표에 참여할 수 있는 기능을 제공합니다.
 
