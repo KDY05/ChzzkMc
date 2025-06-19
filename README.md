@@ -5,11 +5,11 @@ ChzzkMc는 한국의 스트리밍 플랫폼인 치지직의 채팅을 마인크�
 ## 라이센스
 
 이 프로젝트는 GNU General Public License v3.0(GPL-3.0) 라이센스 하에 배포됩니다.
-자세한 내용은 [LICENSE](LICENSE) 파일을 참조하세요.
+자세한 내용은 [LICENSE](./LICENSE) 파일을 참조하세요.
 
 ## 라이브러리
 
-ChzzkMC는 치지직의 비공식 자바 API 라이브러리 [chzzk4j](https://github.com/R2turnTrue/chzzk4j)를 기반으로 만들어졌습니다.
+ChzzkMC는 치지직의 비공식 자바 API 라이브러리 [chzzk4j](https://github.com/R2turnTrue/chzzk4j)를 포함합니다. ([chzzk4j-LICENSE](./chzzk4j-LICENSE.txt))
 
 ## 요구사항
 
@@ -75,7 +75,7 @@ vote:
 
 다른 플러그인에서 ChzzkMc의 투표 기능을 사용할 수 있습니다. 
 ChzzkMcProvider로 투표를 시작 및 종료하고, VoteEndEvent로 투표 결과를 확인할 수 있습니다.
-자세한 내용은 [api](src/main/java/io/github/kdy05/chzzkMc/api) 패키지를 참고해주세요.
+자세한 내용은 [api](./src/main/java/io/github/kdy05/chzzkMc/api) 패키지를 참고해주세요.
 
 ### 설치
 로컬 JAR 파일을 참조하여 개발해야 합니다.

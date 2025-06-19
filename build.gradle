@@ -64,4 +64,11 @@ processResources {
 jar {
     from(shade.collect { it.isDirectory() ? it : zipTree(it) })
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    from('LICENSE') {
+        into 'META-INF'
+    }
+    from('chzzk4j-LICENSE.txt') {
+        into 'META-INF/licenses'
+        rename { 'chzzk4j-LICENSE.txt' }
+    }
 }
