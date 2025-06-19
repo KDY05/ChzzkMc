@@ -45,6 +45,8 @@ vote:
   durationSec: 120
   # 투표 결과를 발표할지 여부
   showingResult: true
+  # 남은 시간 표시 방식 (action_bar 또는 chat)
+  timerDisplay: "action_bar"
 ```
 
 ## 사용법
@@ -78,11 +80,16 @@ ChzzkMcProvider로 투표를 시작 및 종료하고, VoteEndEvent로 투표 결
 자세한 내용은 [api](./src/main/java/io/github/kdy05/chzzkMc/api) 패키지를 참고해주세요.
 
 ### 설치
-로컬 JAR 파일을 참조하여 개발해야 합니다.
+[JitPack](https://jitpack.io/#KDY05/ChzzkMc/)을 통하여 의존성을 추가할 수 있습니다.
 
 ```groovy
+repositories {
+    mavenCentral()
+    maven { url 'https://jitpack.io' }
+}
+
 dependencies {
-    compileOnly files("libs/ChzzkMc-1.0.1.jar")
+    implementation 'com.github.KDY05:ChzzkMc:v1.0.2'
 }
 ```
 
