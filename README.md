@@ -124,3 +124,23 @@ public void onVoteEnd(VoteEndEvent event) {
     // 투표 결과 처리
 }
 ```
+
+### AsyncChzzkChatEvent 예제
+치지직 채팅 메시지를 비동기로 전달받을 수 있습니다.
+
+```java
+@EventHandler
+public void onChzzkChat(AsyncChzzkChatEvent event) {
+    String username = event.getUsername();  // 사용자명 (익명일 경우 "익명")
+    String message = event.getMessage();    // 채팅 메시지 내용
+    boolean isAnonymous = event.isAnonymous();  // 익명 사용자 여부
+    
+    // 특정 키워드 감지
+    if (message.contains("안녕")) {
+        // 비동기 이벤트에서 Bukkit API 사용시 메인 스레드로 스케줄링 필요
+        Bukkit.getScheduler().runTask(plugin, () ->
+                Bukkit.broadcast(Component.text(username + "님이 인사했습니다!"))
+        );
+    }
+}
+```

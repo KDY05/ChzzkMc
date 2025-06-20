@@ -67,7 +67,7 @@ public class ChatManager {
             String content = msg.getContent();
             String username = msg.getProfile() != null ? msg.getProfile().getNickname() : "익명";
 
-            Bukkit.getScheduler().runTask(plugin, () -> {
+            Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
                 AsyncChzzkChatEvent chatEvent = new AsyncChzzkChatEvent(username, content);
                 Bukkit.getPluginManager().callEvent(chatEvent);
             });
