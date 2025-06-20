@@ -24,7 +24,7 @@ public class VoteTimerManager {
             remainingSeconds = durationSeconds;
             voteTimer = Bukkit.getScheduler().runTaskLater(plugin, onTimerEnd, durationSeconds * 20L);
             
-            String timerDisplay = plugin.getConfig().getString("vote.timerDisplay", "action_bar");
+            String timerDisplay = plugin.getConfig().getString("display.timer", "action_bar");
             if ("chat".equals(timerDisplay)) {
                 startChatTimer();
             } else {
@@ -60,7 +60,7 @@ public class VoteTimerManager {
             
             int minutes = remainingSeconds / 60;
             int seconds = remainingSeconds % 60;
-            String timeText = String.format("남은 투표 시간: %d:%02d", minutes, seconds);
+            String timeText = String.format("남은 투표 시간 %d:%02d", minutes, seconds);
             
             for (Player player : Bukkit.getOnlinePlayers()) {
                 player.sendActionBar(Component.text(timeText, NamedTextColor.YELLOW));
@@ -91,7 +91,7 @@ public class VoteTimerManager {
             if (shouldShowMessage) {
                 int minutes = remainingSeconds / 60;
                 int seconds = remainingSeconds % 60;
-                String timeText = String.format("남은 투표 시간: %d:%02d", minutes, seconds);
+                String timeText = String.format("\n남은 투표 시간 %d:%02d\n", minutes, seconds);
                 
                 for (Player player : Bukkit.getOnlinePlayers()) {
                     player.sendMessage(Component.text(timeText, NamedTextColor.YELLOW));

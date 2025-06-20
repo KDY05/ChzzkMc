@@ -33,6 +33,10 @@ channel-id: "1dcb975316a0be7bc445beecc29b9673"
 # 치지직 채팅 출력 여부
 broadcast-chat: false
 
+display:
+  # 남은 시간 표시 방식 (action_bar 또는 chat)
+  timer: "action_bar"
+
 vote:
   # 투표 선택지 개수 (2-4)
   option: 3
@@ -46,8 +50,6 @@ vote:
   durationSec: 120
   # 투표 결과를 발표할지 여부
   showingResult: true
-  # 남은 시간 표시 방식 (action_bar 또는 chat)
-  timerDisplay: "action_bar"
 ```
 
 ## 사용법
@@ -58,7 +60,7 @@ vote:
 - `/chzzkmc vote <start|end>` - 투표 시작 / 강제종료
 
 ### 권한
-`chzzkmc.use` (기본값: OP)
+- `chzzkmc.use` (기본값: OP)
 
 ### 투표 참여 방법
 시청자들은 치지직 채팅에서 다음 명령어로 투표에 참여할 수 있습니다:

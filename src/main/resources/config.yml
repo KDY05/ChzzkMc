@@ -6,6 +6,10 @@ channel-id: "1dcb975316a0be7bc445beecc29b9673"
 # 치지직 채팅 출력 여부
 broadcast-chat: false
 
+display:
+  # 남은 시간 표시 방식 (action_bar 또는 chat)
+  timer: "action_bar"
+
 vote:
   # 투표 선택지 개수 (2-4)
   option: 3
@@ -19,5 +23,3 @@ vote:
   durationSec: 120
   # 투표 결과를 발표할지 여부
   showingResult: true
-  # 남은 시간 표시 방식 (action_bar 또는 chat)
-  timerDisplay: "action_bar"

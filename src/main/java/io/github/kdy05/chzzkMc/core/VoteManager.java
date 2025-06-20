@@ -8,24 +8,29 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitTask;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicIntegerArray;
 
 public class VoteManager {
 
+    private final ChzzkMc plugin;
     private final VoteBossBarManager bossBarManager;
     private final VoteTimerManager timerManager;
     private final VoteResultManager resultManager;
     
-    private boolean voteActive = false;
+    private volatile boolean voteActive = false;
     private final Map<String, Integer> userVotes = new HashMap<>();
-    private int[] voteCounts;
+    private AtomicIntegerArray voteCounts;
     private String[] optionTitles;
     private int maxOptions;
     private boolean isApiVote = false;
+    private BukkitTask bossBarUpdateTask;
     
     public VoteManager(ChzzkMc plugin) {
+        this.plugin = plugin;
         this.bossBarManager = new VoteBossBarManager();
         this.timerManager = new VoteTimerManager(plugin);
         this.resultManager = new VoteResultManager(plugin);
@@ -48,12 +53,17 @@ public class VoteManager {
         
         resetVoteData();
         bossBarManager.initializeBossBars(optionTitles);
-        bossBarManager.updateBossBars(voteCounts);
+        int[] initialCounts = new int[maxOptions];
+        for (int i = 0; i < maxOptions; i++) {
+            initialCounts[i] = voteCounts.get(i);
+        }
+        bossBarManager.updateBossBars(initialCounts);
         bossBarManager.showBossBars();
 
         voteActive = true;
         
         announceVoteStart();
+        startBossBarUpdateTask();
         timerManager.startTimer(durationSeconds, () -> endVote(showingResult));
 
         return true;
@@ -69,8 +79,10 @@ public class VoteManager {
     }
     
     private void resetVoteData() {
-        voteCounts = new int[maxOptions];
-        userVotes.clear();
+        voteCounts = new AtomicIntegerArray(maxOptions);
+        synchronized (userVotes) {
+            userVotes.clear();
+        }
     }
 
     public void endVote() {
@@ -85,20 +97,25 @@ public class VoteManager {
 
         voteActive = false;
         timerManager.cancelTimers();
+        stopBossBarUpdateTask();
         bossBarManager.hideBossBars();
         
-        resultManager.announceResults(optionTitles, voteCounts, showingResult);
+        int[] finalCounts = new int[maxOptions];
+        for (int i = 0; i < maxOptions; i++) {
+            finalCounts[i] = voteCounts.get(i);
+        }
+        resultManager.announceResults(optionTitles, finalCounts, showingResult);
 
         if (isApiVote) {
-            resultManager.fireVoteEndEvent(optionTitles, voteCounts);
+            resultManager.fireVoteEndEvent(optionTitles, finalCounts);
         }
 
         resetVoteData();
     }
 
-    public boolean processVoteCommand(String username, String message) {
+    public void processVoteCommand(String username, String message) {
         if (!voteActive || !message.startsWith("!투표")) {
-            return false;
+            return;
         }
 
         String formatted = message.replaceAll("\\s+", ""); // 모든 공백 제거
@@ -113,19 +130,18 @@ public class VoteManager {
         }
 
         if (voteOption == -1) {
-            return false;
+            return;
         }
 
-        Integer previousVote = userVotes.get(username);
-        if (previousVote != null) {
-            voteCounts[previousVote]--;
+        synchronized (userVotes) {
+            Integer previousVote = userVotes.get(username);
+            if (previousVote != null) {
+                voteCounts.decrementAndGet(previousVote);
+            }
+
+            userVotes.put(username, voteOption);
+            voteCounts.incrementAndGet(voteOption);
         }
-
-        userVotes.put(username, voteOption);
-        voteCounts[voteOption]++;
-
-        bossBarManager.updateBossBars(voteCounts);
-        return true;
     }
 
     public void addPlayerToBossBars(Player player) {
@@ -152,6 +168,25 @@ public class VoteManager {
     
     public void reloadConfig() {
         resultManager.reloadShowingResult();
+    }
+    
+    private void startBossBarUpdateTask() {
+        bossBarUpdateTask = Bukkit.getScheduler().runTaskTimer(plugin, () -> {
+            if (voteActive) {
+                int[] currentCounts = new int[maxOptions];
+                for (int i = 0; i < maxOptions; i++) {
+                    currentCounts[i] = voteCounts.get(i);
+                }
+                bossBarManager.updateBossBars(currentCounts);
+            }
+        }, 0L, 20L); // 0 ticks delay, 20 ticks interval (1 second)
+    }
+    
+    private void stopBossBarUpdateTask() {
+        if (bossBarUpdateTask != null) {
+            bossBarUpdateTask.cancel();
+            bossBarUpdateTask = null;
+        }
     }
 
 }

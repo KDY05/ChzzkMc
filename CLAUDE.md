@@ -84,6 +84,20 @@ External plugins can integrate through:
 - `endVote()`: Force end current vote
 - `VoteEndEvent`: Bukkit event fired when API-initiated votes complete, containing results and statistics
 
+### Performance Optimizations
+
+#### Asynchronous Vote Processing
+- **ChatManager**: Vote command processing (`processVoteCommand`) runs asynchronously using `runTaskAsynchronously()` to prevent blocking the main thread
+- **VoteManager**: Uses thread-safe `AtomicIntegerArray` for vote counts and `synchronized` blocks for user vote management
+- **Boss Bar Updates**: Separated from vote processing - updates every 1 second via scheduled task instead of immediate updates
+- **Chat Broadcasting**: Remains synchronous (`runTask`) to maintain message ordering and proper UI updates
+
+#### Thread Safety Implementation
+- `volatile boolean voteActive`: Ensures visibility across threads
+- `AtomicIntegerArray voteCounts`: Thread-safe atomic operations for vote counting
+- `synchronized (userVotes)`: Protects HashMap operations during concurrent vote processing
+- `ConcurrentHashMap` in ChatBroadcastManager: Thread-safe user color caching
+
 ### Architecture Benefits
 
 - **High Maintainability**: Each manager handles a specific responsibility
@@ -91,3 +105,4 @@ External plugins can integrate through:
 - **Code Reusability**: Common vote logic shared between API and commands
 - **Clean Separation**: UI (boss bars), logic (voting), and timing concerns are separated
 - **Reduced Complexity**: VoteManager went from 322 to 143 lines (55% reduction)
+- **Improved Performance**: Asynchronous vote processing prevents main thread blocking during high chat activity

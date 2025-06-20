@@ -1,7 +1,9 @@
 package io.github.kdy05.chzzkMc.core;
 
 import io.github.kdy05.chzzkMc.ChzzkMc;
+import io.github.kdy05.chzzkMc.api.event.AsyncChzzkChatEvent;
 import io.github.kdy05.chzzkMc.core.chat.ChatBroadcastManager;
+import org.bukkit.Bukkit;
 import xyz.r2turntrue.chzzk4j.ChzzkClient;
 import xyz.r2turntrue.chzzk4j.chat.ChatMessage;
 import xyz.r2turntrue.chzzk4j.chat.ChzzkChat;
@@ -65,13 +67,20 @@ public class ChatManager {
             String content = msg.getContent();
             String username = msg.getProfile() != null ? msg.getProfile().getNickname() : "익명";
 
-            if (content.startsWith("!"))
-                plugin.getVoteManager().processVoteCommand(username, content);
+            Bukkit.getScheduler().runTask(plugin, () -> {
+                AsyncChzzkChatEvent chatEvent = new AsyncChzzkChatEvent(username, content);
+                Bukkit.getPluginManager().callEvent(chatEvent);
+            });
 
-            if (!plugin.getConfig().getBoolean("broadcast-chat"))
-                return;
+            if (content.startsWith("!")) {
+                Bukkit.getScheduler().runTaskAsynchronously(plugin, ()
+                        -> plugin.getVoteManager().processVoteCommand(username, content));
+            }
 
-            broadcastManager.broadcastChatMessage(username, content);
+            if (plugin.getConfig().getBoolean("broadcast-chat")) {
+                Bukkit.getScheduler().runTask(plugin, ()
+                        -> broadcastManager.broadcastChatMessage(username, content));
+            }
         });
     }
 
