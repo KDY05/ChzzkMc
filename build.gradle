@@ -75,9 +75,8 @@ tasks {
 
 publishing {
     publications {
-        maven(MavenPublication) {
-            from components.java
-            artifact shadowJar
+        create('maven', MavenPublication) {
+            artifact tasks.shadowJar
         }
     }
 }
