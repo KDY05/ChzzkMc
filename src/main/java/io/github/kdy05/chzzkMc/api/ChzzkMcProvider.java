@@ -1,5 +1,7 @@
 package io.github.kdy05.chzzkMc.api;
 
+import io.github.kdy05.chzzkMc.config.ConfigManager;
+import io.github.kdy05.chzzkMc.config.TimerDisplayType;
 import io.github.kdy05.chzzkMc.core.VoteManager;
 
 /**
@@ -11,9 +13,11 @@ public class ChzzkMcProvider {
     
     private static ChzzkMcProvider instance;
     private final VoteManager voteManager;
+    private final ConfigManager configManager;
     
-    private ChzzkMcProvider(VoteManager voteManager) {
+    private ChzzkMcProvider(VoteManager voteManager, ConfigManager configManager) {
         this.voteManager = voteManager;
+        this.configManager = configManager;
     }
     
     /**
@@ -30,10 +34,11 @@ public class ChzzkMcProvider {
     /**
      * Initialize the provider (called by ChzzkMc plugin)
      * @param voteManager The VoteManager instance
+     * @param configManager The ConfigManager instance
      */
-    public static void initialize(VoteManager voteManager) {
+    public static void initialize(VoteManager voteManager, ConfigManager configManager) {
         if (instance == null) {
-            instance = new ChzzkMcProvider(voteManager);
+            instance = new ChzzkMcProvider(voteManager, configManager);
         }
     }
     
@@ -127,6 +132,60 @@ public class ChzzkMcProvider {
      * @return true if vote was ended, false if no vote was active
      */
     public boolean endVote() {
-        return voteManager.forceEndVote();
+        if (!voteManager.isVoteActive()) {
+            return false;
+        }
+        voteManager.endVote();
+        return true;
+    }
+    
+    // Configuration API methods
+    
+    /**
+     * Get the current channel ID
+     * @return Current channel ID
+     */
+    public String getChannelId() {
+        return configManager.getChannelId();
+    }
+    
+    /**
+     * Set the channel ID
+     * @param channelId New channel ID
+     */
+    public void setChannelId(String channelId) {
+        configManager.setChannelId(channelId);
+    }
+    
+    /**
+     * Check if chat broadcasting is enabled
+     * @return true if chat broadcasting is enabled
+     */
+    public boolean isBroadcastChatEnabled() {
+        return configManager.isBroadcastChatEnabled();
+    }
+    
+    /**
+     * Enable or disable chat broadcasting
+     * @param enabled true to enable, false to disable
+     */
+    public void setBroadcastChatEnabled(boolean enabled) {
+        configManager.setBroadcastChatEnabled(enabled);
+    }
+    
+    /**
+     * Get the current timer display type
+     * @return Current timer display type
+     */
+    public TimerDisplayType getTimerDisplayType() {
+        return configManager.getTimerDisplayType();
+    }
+    
+    /**
+     * Set the timer display type
+     * @param type New timer display type
+     */
+    public void setTimerDisplayType(TimerDisplayType type) {
+        configManager.setTimerDisplayType(type);
     }
 }

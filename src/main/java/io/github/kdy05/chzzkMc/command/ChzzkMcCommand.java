@@ -59,9 +59,8 @@ public class ChzzkMcCommand implements CommandExecutor, TabCompleter {
     }
 
     private void handleReload(CommandSender sender) {
-        plugin.reloadConfig();
+        plugin.getConfigManager().reloadConfig();
         chatManager.reconnect();
-        voteManager.reloadConfig();
         sender.sendMessage(Component.text("config.yml 설정이 새로고침되었습니다.", NamedTextColor.GREEN));
     }
 
@@ -80,9 +79,9 @@ public class ChzzkMcCommand implements CommandExecutor, TabCompleter {
                 }
                 
                 // config에서 투표 설정 읽기
-                String[] configTitles = plugin.getConfig().getStringList("vote.titles").toArray(new String[0]);
-                int configOptions = plugin.getConfig().getInt("vote.option", 3);
-                int configDuration = plugin.getConfig().getInt("vote.durationSec", 120);
+                String[] configTitles = plugin.getConfigManager().getVoteTitles();
+                int configOptions = plugin.getConfigManager().getVoteOptionCount();
+                int configDuration = plugin.getConfigManager().getVoteDurationSec();
                 
                 // 투표 제목 배열 구성
                 String[] titles = new String[configOptions];
@@ -94,7 +93,7 @@ public class ChzzkMcCommand implements CommandExecutor, TabCompleter {
                     }
                 }
                 
-                boolean success = voteManager.startVote(titles, configDuration, false);
+                boolean success = voteManager.startVote(titles, configDuration, false, true);
                 if (success) {
                     sender.sendMessage(Component.text("투표가 시작되었습니다!", NamedTextColor.GREEN));
                 } else {

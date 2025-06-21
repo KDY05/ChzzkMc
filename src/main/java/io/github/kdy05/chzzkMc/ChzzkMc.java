@@ -2,6 +2,7 @@ package io.github.kdy05.chzzkMc;
 
 import io.github.kdy05.chzzkMc.api.ChzzkMcProvider;
 import io.github.kdy05.chzzkMc.command.ChzzkMcCommand;
+import io.github.kdy05.chzzkMc.config.ConfigManager;
 import io.github.kdy05.chzzkMc.core.ChatManager;
 import io.github.kdy05.chzzkMc.listener.PlayerEventListener;
 import io.github.kdy05.chzzkMc.core.VoteManager;
@@ -16,11 +17,13 @@ public final class ChzzkMc extends JavaPlugin {
 
     private VoteManager voteManager;
     private ChatManager chatManager;
+    private ConfigManager configManager;
 
     @Override
     public void onEnable() {
         saveDefaultConfig();
 
+        configManager = new ConfigManager(this);
         ChzzkClient client = new ChzzkClientBuilder().build();
         voteManager = new VoteManager(this);
         chatManager = new ChatManager(this, client);
@@ -29,7 +32,7 @@ public final class ChzzkMc extends JavaPlugin {
         Objects.requireNonNull(Bukkit.getServer().getPluginCommand("chzzkmc"))
                 .setExecutor(new ChzzkMcCommand(this, voteManager, chatManager));
         Bukkit.getPluginManager().registerEvents(new PlayerEventListener(voteManager), this);
-        ChzzkMcProvider.initialize(voteManager);
+        ChzzkMcProvider.initialize(voteManager, configManager);
 
         getLogger().info("플러그인이 활성화되었습니다.");
     }
@@ -49,5 +52,9 @@ public final class ChzzkMc extends JavaPlugin {
 
     public ChatManager getChatManager() {
         return chatManager;
+    }
+
+    public ConfigManager getConfigManager() {
+        return configManager;
     }
 }

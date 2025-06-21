@@ -27,6 +27,7 @@ public class VoteManager {
     private String[] optionTitles;
     private int maxOptions;
     private boolean isApiVote = false;
+    private boolean showingResult = false;
     private BukkitTask bossBarUpdateTask;
     
     public VoteManager(ChzzkMc plugin) {
@@ -35,12 +36,6 @@ public class VoteManager {
         this.timerManager = new VoteTimerManager(plugin);
         this.resultManager = new VoteResultManager(plugin);
     }
-
-    public boolean startVote(String[] optionTitles, int durationSeconds, boolean isApiVote) {
-        // 이 메서드는 커맨드 전용이므로 항상 config 설정을 사용
-        boolean showingResult = resultManager.isShowingResult();
-        return startVote(optionTitles, durationSeconds, isApiVote, showingResult);
-    }
     
     public boolean startVote(String[] optionTitles, int durationSeconds, boolean isApiVote, boolean showingResult) {
         if (voteActive) {
@@ -48,6 +43,7 @@ public class VoteManager {
         }
 
         this.isApiVote = isApiVote;
+        this.showingResult = showingResult;
         maxOptions = optionTitles.length;
         this.optionTitles = optionTitles.clone();
         
@@ -64,7 +60,7 @@ public class VoteManager {
         
         announceVoteStart();
         startBossBarUpdateTask();
-        timerManager.startTimer(durationSeconds, () -> endVote(showingResult));
+        timerManager.startTimer(durationSeconds, this::endVote);
 
         return true;
     }
@@ -86,11 +82,6 @@ public class VoteManager {
     }
 
     public void endVote() {
-        boolean showingResult = !isApiVote && resultManager.isShowingResult();
-        endVote(showingResult);
-    }
-    
-    private void endVote(boolean showingResult) {
         if (!voteActive) {
             return;
         }
@@ -154,20 +145,8 @@ public class VoteManager {
         bossBarManager.removePlayerFromBossBars(player);
     }
 
-    public boolean forceEndVote() {
-        if (!voteActive) {
-            return false;
-        }
-        endVote();
-        return true;
-    }
-
     public boolean isVoteActive() {
         return voteActive;
-    }
-    
-    public void reloadConfig() {
-        resultManager.reloadShowingResult();
     }
     
     private void startBossBarUpdateTask() {

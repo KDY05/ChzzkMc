@@ -9,15 +9,9 @@ import org.bukkit.Bukkit;
 public class VoteResultManager {
     
     private final ChzzkMc plugin;
-    private boolean showingResult = true;
     
     public VoteResultManager(ChzzkMc plugin) {
         this.plugin = plugin;
-        reloadShowingResult();
-    }
-    
-    public void announceResults(String[] optionTitles, int[] voteCounts) {
-        announceResults(optionTitles, voteCounts, showingResult);
     }
     
     public void announceResults(String[] optionTitles, int[] voteCounts, boolean showingResult) {
@@ -66,15 +60,7 @@ public class VoteResultManager {
 
         return winningOption;
     }
-    
-    public boolean isShowingResult() {
-        return showingResult;
-    }
-    
-    public void reloadShowingResult() {
-        this.showingResult = plugin.getConfig().getBoolean("vote.showingResult", true);
-    }
-    
+
     private NamedTextColor getColorForOption(int option) {
         return switch (option) {
             case 0 -> NamedTextColor.RED;
