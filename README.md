@@ -1,7 +1,11 @@
 # ChzzkMc
 [![](https://jitpack.io/v/KDY05/ChzzkMc.svg)](https://jitpack.io/#KDY05/ChzzkMc)
 
-ChzzkMc는 한국의 스트리밍 플랫폼인 치지직의 채팅을 마인크래프트 서버에 실시간으로 연동하고, 시청자들이 채팅으로 투표에 참여할 수 있는 기능을 제공합니다.
+ChzzkMc는 네이버의 스트리밍 플랫폼인 치지직의 채팅 정보를 마인크래프트 서버에 실시간으로 연동하고, 시청자들이 채팅으로 투표에 참여할 수 있는 기능을 제공합니다.
+
+<a href="https://coff.ee/ararab" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee" height="60" width="217"></a>
+
+*커피 한 잔의 응원이 큰 힘이 됩니다!*
 
 ## 라이센스
 
